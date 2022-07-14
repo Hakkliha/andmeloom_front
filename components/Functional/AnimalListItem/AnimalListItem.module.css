@@ -1,0 +1,17 @@
+
+
+.listItemContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease-in-out;
+}

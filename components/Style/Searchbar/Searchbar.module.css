@@ -1,0 +1,104 @@
+.searchbar {
+    position: relative;
+    width: 60rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    padding: 0px;
+    margin: 1rem 2rem;
+    overflow: hidden;
+}
+
+
+
+.searchbar__input {
+    width: 100%;
+}
+
+.searchbar__input input {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0.5rem;
+    border: none;
+    font-size: 1.5rem;
+}
+
+.searchbar__input input:focus {
+    outline: none;
+    border: none;
+}
+
+.search_icon {
+    position: absolute;
+    cursor: pointer;
+    animation: fadeInSearch 1s linear;
+    animation-fill-mode: forwards;
+}
+
+@keyframes fadeInSearch {
+    from {
+        opacity: 0;
+        transform: translate(0, 40%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-325%, 40%);
+    }
+}
+
+.close_icon {
+    position: absolute;
+    cursor: pointer;
+    animation: fadeInClose 1s linear;
+    animation-fill-mode: forwards;
+}
+
+@keyframes fadeInClose {
+    from {
+        opacity: 0;
+        transform: translate(0, 40%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-150%, 40%);
+    }
+}
+
+
+.load_icon {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    animation: fadeIn 1s linear, rotatePulsate linear 2s infinite;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(5rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes rotatePulsate {
+    0% {
+        scale: 0.9;
+        transform: rotate(0deg);
+    }
+    50% {
+        scale: 1.1;
+        transform: rotate(180deg);
+    }
+    100% {
+        scale: 1;
+        transform: rotate(360deg);
+    }
+}

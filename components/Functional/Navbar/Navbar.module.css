@@ -1,0 +1,123 @@
+/*Make inline responsive navbar with classes .navbar, .navbar__logo and .navbar__links*/
+.navbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+    margin: 0;
+    list-style: none;
+    font-size: 2rem;
+    border: 1px solid #ddd;
+    /*Make sticky to top*/
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #fff;
+}
+
+.navbar__logo {
+    z-index: 10;
+}
+
+
+.navbar__links {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    list-style: none;
+}
+
+.navbar__links a:not(:last-child) {
+    text-decoration: none;
+    color: #000;
+    margin-right: 1rem;
+}
+
+@media (max-width: 768px) {
+    .navbar__logo {
+        height: 5rem;
+        width: 5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar__logo {
+        height: 3rem;
+        width: 3rem;
+    }
+}
+
+@media (max-width: 320px) {
+    .navbar__logo {
+        height: 2rem;
+        width: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar__links {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar__links {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+}
+
+@media (max-width: 320px) {
+    .navbar__links {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+}
+
+/*.navbar {
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #e5e5e5;
+    border-radius: 0;
+    margin-bottom: 0;
+    padding: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    position: relative;
+    z-index: 10;
+}
+
+.navbar__logo {
+    position: relative;
+    z-index: 10;
+    height: 10rem;
+    width: 10rem;
+}
+
+.navbar__links {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+*/
