@@ -1,13 +1,19 @@
 import Link from 'next/link';
 import style from '../../styles/animals/AnimalList.module.css';
 import AnimalList from '../../components/Functional/AnimalList';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {animals as animals_data} from '../../data/DUMMYDATA';
 import Head from 'next/head';
 import Searchbar from "../../components/Style/Searchbar";
+import AnimalService from "../../functional/AnimalService";
+import TokenService from "../../functional/TokenService";
+import {useData} from "../../functional/DataContext";
+
 
 export default function Animals(props) {
-    const [animals, setAnimals] = useState(animals_data);
+    const [searchParam, setSearchParam] = useState('');
+    const {animals, fetchAnimals} = useData();
+
     return (
         <>
             <Head>

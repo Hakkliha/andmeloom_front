@@ -4,9 +4,8 @@ export default class Owner {
     constructor(id, email, password, firstname, lastname, fullName, phone, street, houseNr, apartment, city, zip, county, country) {
         this.id = id;
         this.email = email;
-        this.password = password;
-        this.firstname = firstname;
-        this.lastname = lastname;
+        this.firstName = firstname;
+        this.lastName = lastname;
         this.fullName = fullName;
         this.phone = phone;
         this.street = street;
@@ -19,7 +18,7 @@ export default class Owner {
     }
 
     getFullName() {
-        return `${this.firstname} ${this.lastname}`;
+        return `${this.firstName} ${this.lastName}`;
     }
 
     // get address string
@@ -30,8 +29,8 @@ export default class Owner {
         return {
             id: this.id,
             email: this.email,
-            firstname: this.firstname,
-            lastname: this.lastname,
+            firstName: this.firstName,
+            lastName: this.lastName,
             fullName: this.fullName,
             phone: this.phone,
             street: this.street,
@@ -42,5 +41,9 @@ export default class Owner {
             county: this.county,
             country: this.country
         }
+    }
+
+    static fromJSON(json) {
+        return new Owner(json.id, json.email, json.firstName, json.lastName, json.fullName, json.phone, json.street, json.houseNr, json.apartment, json.city, json.zip, json.county, json.country);
     }
 }

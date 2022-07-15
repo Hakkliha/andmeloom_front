@@ -1,6 +1,6 @@
 import {useState} from "react";
 import {useRouter} from "next/router";
-import AuthService from "../../../functional/auth.js";
+import AuthService from "../../../functional/AuthService.js";
 import LoadingSpinner from "../../../components/Style/LoadingSpinner";
 import {useAuth} from "../../../functional/AuthContext";
 

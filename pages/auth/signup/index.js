@@ -1,7 +1,7 @@
 import {useRouter} from "next/router";
 import {useState} from "react";
 import StyleButton from "../../../components/Style/StyleButton";
-import AuthService from "../../../functional/auth.js";
+import AuthService from "../../../functional/AuthService.js";
 
 export default function Signup(props) {
     const router = useRouter();

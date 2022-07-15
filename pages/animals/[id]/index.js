@@ -4,16 +4,18 @@ import {animals as animals_data, owners as owners_data, appointments as appointm
 import Animal from '../../../data/classes/Animal';
 import Owner from '../../../data/classes/Owner';
 import Appointment from "../../../data/classes/Appointment";
+import AnimalService from "../../../functional/AnimalService";
+import OwnerService from "../../../functional/OwnerService";
 
 
 export default function AnimalDetail(props) {
-    const [owner, setOwner] = useState(owners_data[0]);
-    const [animal, setAnimal] = useState(animals_data[0]);
+    const [owner, setOwner] = useState(null);
+    const [animal, setAnimal] = useState(null);
     const [appointments, setAppointments] = useState([]);
 
     useEffect(() => {
-        const owner = owners_data.find(owner => owner.id === props.owner.id);
-        const animal = animals_data.find(animal => animal.id === props.animal.id);
+        const owner = Owner.fromJSON(props.owner);
+        const animal = Animal.fromJSON(props.animal, owner);
         const appointments = appointmens_data.filter(appointment => appointment.animal.id === animal.id);
         setOwner(owner);
         setAnimal(animal);
@@ -66,13 +68,14 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps(context) {
-    const animal = animals_data.find(animal => `${animal.id}` === context.params.id);
-    const owner = owners_data.find(owner => owner.id === animal.owner.id);
-    console.log(owners_data[0].id, animal.owner.id, owners_data[0].id === animal.owner.id);
+    const animal = await AnimalService.getAnimalDetail(context.params.id);
+    const animalData = animal.data;
+    const owner = await OwnerService.getOwnerDetail(animalData.owner.id);
+    const ownerData = owner.data;
     return {
         props: {
-            animal: animal.toJSON(),
-            owner: owner.toJSON()
+            animal: animalData,
+            owner: ownerData
         }
     }
 }

@@ -1,5 +1,5 @@
 import api from './api';
-import TokenService from './token';
+import TokenService from './TokenService';
 
 class AuthService {
     login(username, password) {

@@ -5,7 +5,7 @@ export default class Animal {
         this.gender = gender;
         this.species = species;
         this.breed = breed;
-        this.age = age;
+        this.dateOfBirth = age;
         this.weight = weight;
         this.chipNr = chipNr;
         this.owner = owner;
@@ -13,7 +13,10 @@ export default class Animal {
 
     // method to convert age Date object to age string with years, months and days
     getAge() {
-        const ageInMilliseconds = Date.now() - this.age.getTime();
+        if (!this.dateOfBirth) {
+            return '';
+        }
+        const ageInMilliseconds = Date.now() - this.dateOfBirth.getTime();
         const ageInYears = Math.floor(ageInMilliseconds / (1000 * 60 * 60 * 24 * 365));
         // subtract years from ageInMilliseconds to get months
         const ageInMonths = Math.floor((ageInMilliseconds - ageInYears * 1000 * 60 * 60 * 24 * 365) / (1000 * 60 * 60 * 24 * 30));
@@ -31,7 +34,7 @@ export default class Animal {
 
     // get age date string
     getAgeISO() {
-        return this.age.toISOString().slice(0,10);
+        return this.dateOfBirth.toISOString().slice(0,10);
     }
 
     // convert this object to JSON
@@ -42,10 +45,24 @@ export default class Animal {
             gender: this.gender,
             species: this.species,
             breed: this.breed,
-            age: this.getAgeISO(),
+            age: !this.dateOfBirth ? "" : this.getAgeISO(),
             weight: this.weight,
             chipNr: this.chipNr,
             owner: this.owner.id
         }
+    }
+
+    // create object from JSON
+    static fromJSON(json, owner) {
+        return new Animal(json.id,
+            json.name,
+            json.gender,
+            json.species,
+            json.breed,
+            json.age,
+            json.weight,
+            json.chipNr,
+            owner
+        )
     }
 }

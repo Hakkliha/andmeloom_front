@@ -2,7 +2,7 @@ import Link from 'next/link';
 import styles from './Layout.module.css';
 import Footer from '../Footer';
 import Navbar from '../Navbar';
-import AuthService from "../../../functional/auth";
+import AuthService from "../../../functional/AuthService";
 import {useEffect, useState} from "react";
 
 export default function Layout(props) {

@@ -6,7 +6,7 @@ import Owner from '../../../data/classes/Owner';
 import Appointment from '../../../data/classes/Appointment';
 
 export default function OwnerDetail(props) {
-    const [owner, setOwner] = useState(new Owner(props.owner.id, props.owner.email, "",  props.owner.firstname, props.owner.lastname, `${props.owner.firstname} ${props.owner.lastname}`, props.owner.phone, props.owner.street, props.owner.houseNr, props.owner.apartment, props.owner.city, props.owner.zip, props.owner.county, props.owner.country));
+    const [owner, setOwner] = useState(new Owner(props.owner.id, props.owner.email, props.owner.firstname, props.owner.lastname, `${props.owner.firstname} ${props.owner.lastname}`, props.owner.phone, props.owner.street, props.owner.houseNr, props.owner.apartment, props.owner.city, props.owner.zip, props.owner.county, props.owner.country));
     const [appointments, setAppointments] = useState(appointments_data.filter(appointment => appointment.owner.id === owner.id));
     const [animals, setAnimals] = useState(animals_data.filter(animal => animal.owner.id === owner.id));
     return (

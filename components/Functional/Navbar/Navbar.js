@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import styles from './Navbar.module.css';
 import Image from 'next/image';
-import AuthService from '../../../functional/auth';
+import AuthService from '../../../functional/AuthService';
 import {useEffect, useState} from "react";
 import {useAuth} from "../../../functional/AuthContext";
 

@@ -4,16 +4,16 @@ import Appointment from "./classes/Appointment";
 
 // create 10 owners
 const owners = [
-    new Owner(1, "x@x.com", "123456", "John", "Doe", "John Doe", "123456789", "Street 1", "1", "1", "City 1", "12345", "County 1", "Country 1"),
-    new Owner(2, "lol12@ernits.com", "123456", "John", "Doe", "John Doe", "123456789", "Street 1", "1", "1", "City 1", "12345", "County 1", "Country 1"),
-    new Owner(3, "lol23@ernits.com", "123456", "John", "Doe", "John Doe", "123456789", "Street 1", "1", "1", "City 1", "12345", "County 1", "Country 1"),
-    new Owner(4, "lol34@ernits.com", "123456", "John", "Doe", "John Doe", "123456789", "Street 1", "1", "1", "City 1", "12345", "County 1", "Country 1"),
-    new Owner(5, "lol45@ernits.com", "123456", "John", "Doe", "John Doe", "123456789", "Street 1", "1", "1", "City 1", "12345", "County 1", "Country 1"),
-    new Owner(6, "lol56@ernits.com", "123456", "John", "Doe", "John Doe", "123456789", "Street 1", "1", "1", "City 1", "12345", "County 1", "Country 1"),
-    new Owner(7, "lol67@ernits.com", "123456", "John", "Doe", "John Doe", "123456789", "Street 1", "1", "1", "City 1", "12345", "County 1", "Country 1"),
-    new Owner(8, "lol78@ernits.com", "123456", "John", "Doe", "John Doe", "123456789", "Street 1", "1", "1", "City 1", "12345", "County 1", "Country 1"),
-    new Owner(9, "lol89@ernits.com", "123456", "John", "Doe", "John Doe", "123456789", "Street 1", "1", "1", "City 1", "12345", "County 1", "Country 1"),
-    new Owner(10, "lol90@ernits.com", "123456", "John", "Doe", "John Doe", "123456789", "Street 1", "1", "1", "City 1", "12345", "County 1", "Country 1")];
+    new Owner(1, "x@x.com",  "John", "Doe", "John Doe", "123456789", "Street 1", "1", "1", "City 1", "12345", "County 1", "Country 1"),
+    new Owner(2, "lol12@ernits.com",  "John", "Doe", "John Doe", "123456789", "Street 1", "1", "1", "City 1", "12345", "County 1", "Country 1"),
+    new Owner(3, "lol23@ernits.com",  "John", "Doe", "John Doe", "123456789", "Street 1", "1", "1", "City 1", "12345", "County 1", "Country 1"),
+    new Owner(4, "lol34@ernits.com",  "John", "Doe", "John Doe", "123456789", "Street 1", "1", "1", "City 1", "12345", "County 1", "Country 1"),
+    new Owner(5, "lol45@ernits.com",  "John", "Doe", "John Doe", "123456789", "Street 1", "1", "1", "City 1", "12345", "County 1", "Country 1"),
+    new Owner(6, "lol56@ernits.com",  "John", "Doe", "John Doe", "123456789", "Street 1", "1", "1", "City 1", "12345", "County 1", "Country 1"),
+    new Owner(7, "lol67@ernits.com",  "John", "Doe", "John Doe", "123456789", "Street 1", "1", "1", "City 1", "12345", "County 1", "Country 1"),
+    new Owner(8, "lol78@ernits.com",  "John", "Doe", "John Doe", "123456789", "Street 1", "1", "1", "City 1", "12345", "County 1", "Country 1"),
+    new Owner(9, "lol89@ernits.com",  "John", "Doe", "John Doe", "123456789", "Street 1", "1", "1", "City 1", "12345", "County 1", "Country 1"),
+    new Owner(10, "lol90@ernits.com",  "John", "Doe", "John Doe", "123456789", "Street 1", "1", "1", "City 1", "12345", "County 1", "Country 1")];
 
 // create 10 animals with random data
 const animals = [
