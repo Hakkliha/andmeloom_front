@@ -17,4 +17,7 @@ export default class Appointment {
             animal: this.animal.id
         };
     }
+    static fromJSON(json) {
+        return new Appointment(json.id, new Date(json.datetime), json.owner, json.animal);
+    }
 }

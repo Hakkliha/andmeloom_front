@@ -1,4 +1,4 @@
-import {createContext, useContext, useEffect, useState} from "react";
+import {createContext, useContext, useEffect, useState, useCallback} from "react";
 import AnimalService from "./AnimalService";
 import OwnerService from "./OwnerService";
 import AppointmentService from "./AppointmentService";
@@ -30,7 +30,7 @@ const DataProvider = ({children}) => {
     const [owners, setOwners] = useState([]);
     const [appointments, setAppointments] = useState([]);
 
-    const fetchAnimals = async () => {
+    const fetchAnimals = useCallback(async () => {
         const animalsData = TokenService.getUserRole() === "ROLE_ADMIN" ? await AnimalService.getList() : await AnimalService.getAnimalsByUser(TokenService.getUser().id);
         let newAnimals = [];
         animalsData.data.forEach(animal => {
@@ -40,9 +40,9 @@ const DataProvider = ({children}) => {
             newAnimals.push(newAnimal);
         });
         setAnimals(newAnimals);
-    }
+    }, []);
 
-    const fetchOwners = async () => {
+    const fetchOwners = useCallback(async () => {
         const ownersData = TokenService.getUserRole() === "ROLE_ADMIN" ? await OwnerService.getList() : [];
         // loop through list of owners
         let newOwners = [];
@@ -54,9 +54,9 @@ const DataProvider = ({children}) => {
             }
         );
         setOwners(newOwners);
-    }
+    }, []);
 
-    const fetchAppointments = async () => {
+    const fetchAppointments = useCallback(async () => {
         const appointmentsData = TokenService.getUserRole() === "ROLE_ADMIN" ? await AppointmentService.getList() : await AppointmentService.getAppointmentsByUser(TokenService.getUser().id);
         // loop through list of appointments
         let newAppointments = [];
@@ -68,18 +68,18 @@ const DataProvider = ({children}) => {
             }
         );
         setAppointments(newAppointments);
-    }
+    }, []);
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         await fetchAnimals();
         await fetchOwners();
         await fetchAppointments();
-    }
+    }, [fetchAnimals, fetchOwners, fetchAppointments]);
     useEffect(() => {
         fetchData().then(() => {
             console.log("Data updated");
         });
-    }, []);
+    }, [fetchData]);
 
     return (<DataContext.Provider
         value={{animals, setAnimals, owners, setOwners, appointments, setAppointments, fetchData, fetchAnimals, fetchOwners, fetchAppointments}}>

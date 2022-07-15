@@ -6,10 +6,12 @@ import {owners as owner_data} from '../../data/DUMMYDATA';
 import Head from 'next/head';
 import Searchbar from "../../components/Style/Searchbar";
 import OwnerList from "../../components/Functional/OwnerList";
+import {useData} from "../../functional/DataContext";
 
 
 export default function Owners(props) {
-    const [owners, setOwners] = useState(owner_data);
+    const [searchParam, setSearchParam] = useState('');
+    const {owners, fetchOwners} = useData();
     return (
         <>
             <Head>

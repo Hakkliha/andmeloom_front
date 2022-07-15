@@ -1,18 +1,24 @@
 // create form component
 // Language: javascript
 import style from './AnimalForm.module.css';
-import Link from 'next/link';
 import {useState} from "react";
 import {useRouter} from "next/router";
-import {owners as owners_data} from '../../../data/DUMMYDATA';
+import {useData} from "../../../functional/DataContext";
+import AnimalService from "../../../functional/AnimalService";
+import {DatePicker} from "antd";
+import 'antd/dist/antd.css';
+import moment from 'moment';
+import OwnerService from "../../../functional/OwnerService";
+import Owner from "../../../data/classes/Owner";
 
 export default function AnimalForm(props) {
+    const {fetchAnimals, owners} = useData();
     const router = useRouter();
     const [name, setName] = useState('');
     const [gender, setGender] = useState('');
     const [species, setSpecies] = useState('');
     const [breed, setBreed] = useState('');
-    const [age, setAge] = useState('');
+    const [age, setAge] = useState(moment().startOf('day'));
     const [weight, setWeight] = useState('');
     const [owner, setOwner] = useState(props.fromOwner ? String(props.owner.id) : '');
     const onChangeName = (e) => {
@@ -28,7 +34,8 @@ export default function AnimalForm(props) {
         setBreed(e.target.value);
     }
     const onChangeAge = (e) => {
-        setAge(e.target.value);
+
+        setAge(!!e ? e.utc().format('YYYY-MM-DD') : moment().startOf('day'));
     }
     const onChangeWeight = (e) => {
         setWeight(e.target.value);
@@ -38,21 +45,43 @@ export default function AnimalForm(props) {
     }
     const onSubmit = async (e) => {
         e.preventDefault();
-        const animal = {name, gender, species, breed, age, weight, owner};
-        console.log("new Animal", animal);
-        // Set all states back to initial state
-        setName('');
-        setAge('');
-        setBreed('');
-        setGender('');
-        setSpecies('');
-        setWeight('');
-        setOwner('');
-        //props.listReload();
-        // Redirect to the animal list page
-        const pushResponse = await router.push('/animals');
-        console.log(pushResponse);
+        const propsOwner = props.fromOwner ? props.owner : Owner.fromJSON((await OwnerService.getOwnerDetail(owner)).data);
+        const age_date = moment(age).format('YYYY-MM-DD');
+        const animal = {
+            name: name,
+            gender: gender,
+            species: species,
+            breed: breed,
+            chipNr: "",
+            dateOfBirth: age_date,
+            weight: weight,
+            user: propsOwner.toJSON()
+        };
+        const response = await AnimalService.postAnimal(animal);
+        if (response.status === 201) {
+            // Set all states back to initial state
+            // Redirect to the animal list page
+            await fetchAnimals();
+            await router.push('/animals');
+            setName('');
+            setAge(moment().startOf('day'));
+            setBreed('');
+            setGender('');
+            setSpecies('');
+            setWeight('');
+            setOwner('');
+        } else {
+            console.log("Error creating animal");
+            console.log(response);
+        }
+
     }
+
+    const disabledDate = (current) => {
+        // Can not select days before today and today
+        return current && current >= moment().endOf("day");
+    };
+
     return (
         <div className={style.form}>
             <form onSubmit={onSubmit} method="post">
@@ -76,8 +105,8 @@ export default function AnimalForm(props) {
                 </div>
                 <div className={style.formControl}>
                     <label htmlFor="age">Age:</label>
-                    <input type="number" name="age" className={style.formField} min={0} max={1000} value={age}
-                           onChange={onChangeAge}/>
+                    <DatePicker name="age" size={'large'} disabledDate={disabledDate} value={moment(age)}
+                                onChange={onChangeAge}/>
                 </div>
                 <div className={style.formControl}>
                     <label htmlFor="weight">Weight:</label>
@@ -89,7 +118,7 @@ export default function AnimalForm(props) {
                         <label htmlFor="owner">Owner:</label>
                         <select name="owner" className={style.formField} value={owner} onChange={onChangeOwner}>
                             <option value="">Select owner</option>
-                            {owners_data.map(owner => (
+                            {owners.map(owner => (
                                 <option key={owner.id} value={owner.id}>({owner.id}) {owner.fullName}</option>
                             ))}
                         </select>

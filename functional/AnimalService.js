@@ -18,11 +18,11 @@ class AnimalService {
     }
 
     postAnimal(data) {
-        return api.post('/animals', {data});
+        return api.post('/animals', {...data});
     }
 
     putAnimal(data) {
-        return api.put('/animals', {data});
+        return api.put('/animals', {...data});
     }
 
     deleteAnimal(id) {

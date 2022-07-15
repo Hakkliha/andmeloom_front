@@ -1,19 +1,37 @@
-import Link from 'next/link';
-import {useState} from 'react';
-import {animals as animals_data, owners as owners_data} from '../../../../data/DUMMYDATA';
-import Animal from '../../../../data/classes/Animal';
+import {useCallback, useEffect, useState} from 'react';
+import {owners as owners_data} from '../../../../data/DUMMYDATA';
 import Owner from '../../../../data/classes/Owner';
 import AnimalForm from "../../../../components/Functional/AnimalForm";
+import OwnerService from "../../../../functional/OwnerService";
+import LoadingSpinner from "../../../../components/Style/LoadingSpinner";
 
 
 export default function OwnerAnimalAdd(props) {
     const [owner, setOwner] = useState(props.owner);
-    const [animal, setAnimal] = useState(new Animal());
+
+    const updateData = useCallback(async () => {
+            const ownerResponse = await OwnerService.getOwnerDetail(props.ownerId);
+            const ownerData = ownerResponse.data;
+            const newOwner = Owner.fromJSON(ownerData);
+            setOwner(newOwner);
+        }
+        , [props.ownerId]);
+
+    useEffect(() => {
+            updateData().then(() => {
+                console.log("Data updated", new Date().getTime());
+            }).catch(error => {
+                    console.log(error);
+                }
+            );
+        }
+        , [updateData]);
+
     return (
-        <div>
-            <h1>Owner Add Animal for ({owner.id}) {owner.fullName}</h1>
-            <AnimalForm fromOwner={true} owner={owner} />
-            <p>{JSON.stringify(owner)}</p>
+        <div>{!!owner ?
+            <>
+                <h1>Owner Add Animal for ({owner.id}) {owner.fullName}</h1>
+                <AnimalForm fromOwner={true} owner={owner}/></> : <LoadingSpinner/>}
         </div>
     );
 }
@@ -31,10 +49,9 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps(context) {
-    const owner = owners_data.find(owner => `${owner.id}` === context.params.id);
     return {
         props: {
-            owner: owner.toJSON()
+            ownerId: context.params.id
         }
     }
 }

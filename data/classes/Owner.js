@@ -1,7 +1,7 @@
 // owner class
 
 export default class Owner {
-    constructor(id, email, password, firstname, lastname, fullName, phone, street, houseNr, apartment, city, zip, county, country) {
+    constructor(id, email, firstname, lastname, fullName, phone, street, houseNr, apartment, city, zip, county, country) {
         this.id = id;
         this.email = email;
         this.firstName = firstname;
@@ -44,6 +44,6 @@ export default class Owner {
     }
 
     static fromJSON(json) {
-        return new Owner(json.id, json.email, json.firstName, json.lastName, json.fullName, json.phone, json.street, json.houseNr, json.apartment, json.city, json.zip, json.county, json.country);
+        return new Owner(json.id, json.email, json.firstName, json.lastName, `${json.firstName} ${json.lastName}`, json.phone, json.street, json.houseNr, json.apartment, json.city, json.zip, json.county, json.country);
     }
 }

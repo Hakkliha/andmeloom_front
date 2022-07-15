@@ -1,14 +1,42 @@
 import Link from 'next/link';
-import {useState} from 'react';
+import {useState, useCallback, useEffect} from 'react';
 import {animals as animals_data, owners as owners_data, appointments as appointments_data} from '../../../data/DUMMYDATA';
 import Animal from '../../../data/classes/Animal';
 import Owner from '../../../data/classes/Owner';
-import Appointment from '../../../data/classes/Appointment';
+import Appointment from "../../../data/classes/Appointment";
+import AnimalService from "../../../functional/AnimalService";
+import OwnerService from "../../../functional/OwnerService";
 
 export default function OwnerDetail(props) {
-    const [owner, setOwner] = useState(new Owner(props.owner.id, props.owner.email, props.owner.firstname, props.owner.lastname, `${props.owner.firstname} ${props.owner.lastname}`, props.owner.phone, props.owner.street, props.owner.houseNr, props.owner.apartment, props.owner.city, props.owner.zip, props.owner.county, props.owner.country));
-    const [appointments, setAppointments] = useState(appointments_data.filter(appointment => appointment.owner.id === owner.id));
-    const [animals, setAnimals] = useState(animals_data.filter(animal => animal.owner.id === owner.id));
+    const [owner, setOwner] = useState(null);
+    const [appointments, setAppointments] = useState([]);
+    const [animals, setAnimals] = useState([]);
+
+    const updateData = useCallback(async () => {
+        const ownerResponse = await OwnerService.getOwnerDetail(props.ownerId);
+        const ownerData = ownerResponse.data;
+        const animalResponse = await AnimalService.getAnimalsByUser(props.ownerId);
+        const animalData = animalResponse.data;
+        const newOwner = Owner.fromJSON(ownerData);
+        const newAnimals = animalData.map(animal => Animal.fromJSON(animal, newOwner));
+        const appointmentsResponse = appointments_data.filter(appointment => appointment.owner.id === newOwner.id);
+        // const newAppointments = appointmentsResponse.map(appointment => Appointment.fromJSON(appointment));
+        setOwner(newOwner);
+        setAnimals(newAnimals);
+        setAppointments(appointmentsResponse);
+    }
+    , [props.ownerId]);
+
+    useEffect(() => {
+        updateData().then(() => {
+            console.log("Data updated", new Date().getTime());
+        }).catch(error => {
+            console.log(error);
+        }
+        );
+    }
+    , [updateData]);
+
     return (
         <div>
             <h1>Owner Detail</h1>
@@ -18,15 +46,16 @@ export default function OwnerDetail(props) {
                 </Link>
             </p>
             <p>
-                <Link href={`/owners/${owner.id}/add_animal`}>
-                    <a>Add Animal</a>
-                </Link>
+                {!!owner &&
+                    <Link href={`/owners/${owner.id}/add_animal`}>
+                        <a>Add Animal</a>
+                    </Link>}
             </p>
             <div>
             {/*List of animals*/}
             <h2>Animals</h2>
             <div className="animals">
-                {animals.map(animal => (
+                {!! animals && animals.map(animal => (
                     <div key={animal.id}>
                         <Link href={`/animals/${animal.id}`}>
                             <a>{animal.name}</a>
@@ -37,7 +66,7 @@ export default function OwnerDetail(props) {
             {/*List of appointments*/}
             <h2>Appointments</h2>
             <div className="appointments">
-                {appointments.map(appointment => (
+                {!!appointments && appointments.map(appointment => (
                     <div key={appointment.id}>
                         <Link href={`/appointments/${appointment.id}`}>
                             <a>{appointment.getDateTimeISO()}</a>
@@ -63,10 +92,9 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps(context) {
-    const owner = owners_data.find(owner => `${owner.id}` === context.params.id);
     return {
         props: {
-            owner: owner.toJSON()
+            ownerId: context.params.id
         }
     }
 }
