@@ -25,6 +25,7 @@ instance.interceptors.response.use(
     (res) => {
         return res;
     }, async (err) => {
+        console.log(err);
         const originalConfig = err.config;
         if (originalConfig.url !== "/login" && err.response) {
             // Access Token was expired

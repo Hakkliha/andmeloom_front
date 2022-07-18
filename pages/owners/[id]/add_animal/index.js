@@ -4,10 +4,10 @@ import Owner from '../../../../data/classes/Owner';
 import AnimalForm from "../../../../components/Functional/AnimalForm";
 import OwnerService from "../../../../functional/OwnerService";
 import LoadingSpinner from "../../../../components/Style/LoadingSpinner";
-
+import {useData} from "../../../../functional/DataContext";
 
 export default function OwnerAnimalAdd(props) {
-    const [owner, setOwner] = useState(props.owner);
+    const [owner, setOwner] = useState(null);
 
     const updateData = useCallback(async () => {
             const ownerResponse = await OwnerService.getOwnerDetail(props.ownerId);
@@ -37,14 +37,23 @@ export default function OwnerAnimalAdd(props) {
 }
 
 export async function getStaticPaths() {
-    const paths = owners_data.map(owner => ({
+    // const credentials = await axios.post('http://localhost:8080/api/auth/signin', {
+    //     username: "irw", password: "kakajunn123"
+    // });
+    // const allOwners = await axios({
+    //     url: 'http://localhost:8080/api/owners/owner_ids', method: 'get', headers: {
+    //         "Content-Type": "application/json", "Authorization": "Bearer " + credentials.data.token
+    //     }
+    // });
+
+    const allOwners = ["1", "2", "3"];
+    const paths = allOwners.map(id => ({
         params: {
-            id: owner.id.toString(),
+            id: id.toString(),
         },
     }));
     return {
-        paths,
-        fallback: 'blocking',
+        paths, fallback: 'blocking',
     };
 }
 

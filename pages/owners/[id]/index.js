@@ -1,11 +1,12 @@
 import Link from 'next/link';
-import {useState, useCallback, useEffect} from 'react';
-import {animals as animals_data, owners as owners_data, appointments as appointments_data} from '../../../data/DUMMYDATA';
+import {useCallback, useEffect, useState} from 'react';
 import Animal from '../../../data/classes/Animal';
 import Owner from '../../../data/classes/Owner';
 import Appointment from "../../../data/classes/Appointment";
 import AnimalService from "../../../functional/AnimalService";
 import OwnerService from "../../../functional/OwnerService";
+import AppointmentService from "../../../functional/AppointmentService";
+import axios from "axios";
 
 export default function OwnerDetail(props) {
     const [owner, setOwner] = useState(null);
@@ -19,75 +20,76 @@ export default function OwnerDetail(props) {
         const animalData = animalResponse.data;
         const newOwner = Owner.fromJSON(ownerData);
         const newAnimals = animalData.map(animal => Animal.fromJSON(animal, newOwner));
-        const appointmentsResponse = appointments_data.filter(appointment => appointment.owner.id === newOwner.id);
-        // const newAppointments = appointmentsResponse.map(appointment => Appointment.fromJSON(appointment));
+        const appointmentsResponse = await AppointmentService.getAppointmentsByUser(props.ownerId);
+        const newAppointments = appointmentsResponse.data.map(appointment => Appointment.fromJSON(appointment));
         setOwner(newOwner);
         setAnimals(newAnimals);
-        setAppointments(appointmentsResponse);
-    }
-    , [props.ownerId]);
+        setAppointments(newAppointments);
+    }, [props.ownerId]);
 
     useEffect(() => {
         updateData().then(() => {
             console.log("Data updated", new Date().getTime());
         }).catch(error => {
             console.log(error);
-        }
-        );
-    }
-    , [updateData]);
+        });
+    }, [updateData]);
 
-    return (
+    return (<div>
+        <h1>Owner Detail</h1>
+        <p>
+            <Link href="/owners">
+                <a>Back to owners</a>
+            </Link>
+        </p>
+        <p>
+            {!!owner && <>
+                <h2>{!!owner.firstName ? owner.fullName : "No Name"}</h2>
+                <Link href={`/owners/${owner.id}/add_animal`}>
+                    <a>Add Animal</a>
+                </Link></>}
+        </p>
         <div>
-            <h1>Owner Detail</h1>
-            <p>
-                <Link href="/owners">
-                    <a>Back to owners</a>
-                </Link>
-            </p>
-            <p>
-                {!!owner &&
-                    <Link href={`/owners/${owner.id}/add_animal`}>
-                        <a>Add Animal</a>
-                    </Link>}
-            </p>
-            <div>
             {/*List of animals*/}
             <h2>Animals</h2>
             <div className="animals">
-                {!! animals && animals.map(animal => (
-                    <div key={animal.id}>
-                        <Link href={`/animals/${animal.id}`}>
-                            <a>{animal.name}</a>
-                        </Link>
-                    </div>
-                ))}
+                {!!animals && animals.map(animal => (<div key={animal.id}>
+                    <Link href={`/animals/${animal.id}`}>
+                        <a>{animal.name}</a>
+                    </Link>
+                </div>))}
             </div>
             {/*List of appointments*/}
             <h2>Appointments</h2>
             <div className="appointments">
-                {!!appointments && appointments.map(appointment => (
-                    <div key={appointment.id}>
-                        <Link href={`/appointments/${appointment.id}`}>
-                            <a>{appointment.getDateTimeISO()}</a>
-                        </Link>
-                    </div>
-                ))}
-            </div>
+                {!!appointments && appointments.map(appointment => (<div key={appointment.id}>
+                    <Link href={`/appointments/${appointment.id}`}>
+                        <a>{appointment.getDateTimeISO()}</a>
+                    </Link>
+                </div>))}
             </div>
         </div>
-    );
+    </div>);
 }
 
 export async function getStaticPaths() {
-    const paths = owners_data.map(owner => ({
+    // const credentials = await axios.post('http://localhost:8080/api/auth/signin', {
+    //     username: "irw", password: "kakajunn123"
+    // });
+    // const allOwners = await axios({
+    //     url: 'http://localhost:8080/api/owners/owner_ids', method: 'get', headers: {
+    //         "Content-Type": "application/json", "Authorization": "Bearer " + credentials.data.token
+    //     }
+    // });
+
+    const allOwners = ["1", "2", "3"];
+    const paths = allOwners.map(id => ({
         params: {
-            id: owner.id.toString(),
+            id: id.toString(),
         },
     }));
     return {
-        paths,
-        fallback: 'blocking',
+        paths, fallback: 'blocking',
     };
 }
 

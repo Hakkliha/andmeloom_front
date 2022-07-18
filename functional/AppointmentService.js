@@ -13,15 +13,12 @@ class AppointmentService {
         return api.get(`/appointments/userId?userId=${id}`);
     }
 
-    postAppointments(data, date = undefined) {
-        if (!!date) {
-            return api.post(`/appointments?appointmentDate=${date}`, {data});
-        }
-        return api.post(`/appointments`, {data});
+    postAppointments(data) {
+        return api.post(`/appointments`, data);
     }
 
     putAppointments(data) {
-        return api.put('/appointments', {data});
+        return api.put('/appointments', data);
     }
 
     deleteAppointments(id) {

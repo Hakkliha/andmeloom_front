@@ -12,7 +12,9 @@ export default function Navbar(props) {
 
     useEffect(() => {
         setIsAuthenticated(auth);
-        setUserRole(user.roles[0]);
+        if (auth) {
+            setUserRole(user.roles[0]);
+        }
     }, [auth, user]);
 
     return (
@@ -23,19 +25,21 @@ export default function Navbar(props) {
                 </Link>
             </div>
             <div className={styles.navbar__links}>
-                <Link href="/animals">
-                    <a>Animals</a>
-                </Link>
-                <Link href="/appointments">
-                    <a>Appointments</a>
-                </Link>
-                {userRole === 'ROLE_ADMIN' && <Link href="/owners">
-                    <a>Owners</a>
-                </Link>}
+            {isAuthenticated && <>
+            <Link href="/animals">
+                <a>Animals</a>
+            </Link>
+            <Link href="/appointments">
+                <a>Appointments</a>
+            </Link>
+            {userRole === 'ROLE_ADMIN' && <Link href="/owners">
+                <a>Owners</a>
+            </Link>}
 
-                <Link href="/profile">
-                    <a>Profile</a>
-                </Link>
+            <Link href="/profile">
+                <a>Profile</a>
+            </Link></>}
+
                 {isAuthenticated ? <Link href="/auth/login">
                     <a onClick={() => {
                         AuthService.logout();

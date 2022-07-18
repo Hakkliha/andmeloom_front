@@ -4,20 +4,48 @@ import {animals as animals_data, owners as owners_data, appointments as appointm
 import Animal from '../../../data/classes/Animal';
 import Owner from '../../../data/classes/Owner';
 import Appointment from "../../../data/classes/Appointment";
+import AppointmentService from "../../../functional/AppointmentService";
+import moment from "moment";
+import {useData} from "../../../functional/DataContext";
+import {useRouter} from "next/router";
+import {ImCross} from "react-icons/im";
 
 export default function AppointmentDetail(props) {
-    const [owner, setOwner] = useState(owners_data[0]);
-    const [animal, setAnimal] = useState(animals_data[0]);
-    const [appointment, setAppointment] = useState(appointmens_data[0]);
+    const [appointment, setAppointment] = useState(null);
+    const router = useRouter();
+    const {fetchData} = useData();
+    const updateData = useCallback(async () => {
+        const appointmentResponse = await AppointmentService.getAppointmentsDetail(props.appointmentId);
+        const appointmentData = appointmentResponse.data;
+        const newOwner = Owner.fromJSON(appointmentData.user);
+        const newAnimal = Animal.fromJSON(appointmentData.animal, newOwner);
+        const newAppointment = Appointment.fromJSON(appointmentData, newOwner, newAnimal);
+        console.log(appointmentData, newAppointment);
+        setAppointment(newAppointment);
+    }
+    , [props.appointmentId]);
+
+    const onClickDelete = useCallback(async () => {
+        const response = await AppointmentService.deleteAppointments(props.appointmentId);
+        if (response.status === 200) {
+            console.log("Appointment deleted");
+            await fetchData();
+            await router.push("/appointments");
+        } else {
+            console.log("Error deleting appointment");
+        }
+    }
+    , [props.appointmentId]);
 
     useEffect(() => {
-        const owner = owners_data.find(owner => owner.id === props.appointment.owner);
-        const animal = animals_data.find(animal => animal.id === props.appointment.animal);
-        const appointment = appointmens_data.find(appointment => appointment.id === props.appointment.id);
-        setOwner(owner);
-        setAnimal(animal);
-        setAppointment(appointment);
-    }, [props.appointment.animal, props.appointment.owner, props.appointment.id]);
+        updateData().then(() => {
+            console.log("Data updated", new Date().getTime());
+        }
+        ).catch(error => {
+            console.log(error);
+        }
+        );
+    }, [updateData]);
     return (
         <div>
             <h1>Appointment Detail</h1>
@@ -26,47 +54,51 @@ export default function AppointmentDetail(props) {
                     <a>Back to appointments</a>
                 </Link>
             </p>
-            <h1>{appointment.getDateTimeISO()}</h1>
-            <div>
-            {/*    Owner link*/}
-                <h2>Owner</h2>
-            <p>
-                <Link href={`/owners/${owner.id}`}>
-                    <a>{owner.firstname} {owner.lastname}</a>
-                </Link>
-            </p>
+            <p onClick={onClickDelete}><ImCross size={24}/> Delete</p>
 
-            </div>
-            <div>
-            {/*    Animal link*/}
-                <h2>Animal</h2>
-            <p>
-                <Link href={`/animals/${animal.id}`}>
-                    <a>{animal.name}</a>
-                </Link>
-            </p>
-            </div>
+            {!!appointment && <>
+                <h1>{moment(appointment.getDateTimeISO()).format("DD.MM.YYYY HH:mm")}</h1>
+                <div>
+                    {/*    Owner link*/}
+                    <h2>Owner</h2>
+                    <p>
+                        <Link href={`/owners/${appointment.owner.id}`}>
+                            <a>{appointment.owner.firstName} {appointment.owner.lastName}</a>
+                        </Link>
+                    </p>
+
+                </div>
+                <div>
+                    {/*    Animal link*/}
+                    <h2>Animal</h2>
+                    <p>
+                        <Link href={`/animals/${appointment.animal.id}`}>
+                            <a>{appointment.animal.name}</a>
+                        </Link>
+                    </p>
+                </div>
+            </>}
         </div>
     );
 }
 
 export async function getStaticPaths() {
-    const paths = appointmens_data.map(appointment => ({
+    const allOwners = ["1", "2", "3"];
+    const paths = allOwners.map(id => ({
         params: {
-            id: appointment.id.toString(),
+            id: id.toString(),
         },
     }));
     return {
         paths,
-        fallback: false,
+        fallback: 'blocking',
     };
 }
 
-export async function getStaticProps({params}) {
-    const appointment = appointmens_data.find(appointment => appointment.id === Number(params.id));
+export async function getStaticProps(context) {
     return {
         props: {
-            appointment: appointment.toJSON(),
+            appointmentId: context.params.id,
         },
     };
 }

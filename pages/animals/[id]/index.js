@@ -60,6 +60,7 @@ export default function AnimalDetail(props) {
                     <a>Back to animals</a>
                 </Link>
             </p>
+            <p><Link href={`/animals/${props.animalId}/add_appointment`}><a>Add Appointment</a></Link></p>
             <h1>{!!animal ? animal.name : "Animal name data missing"}</h1>
             <p onClick={onClickDelete}><ImCross size={24}/> Delete</p>
             <div>
@@ -88,9 +89,10 @@ export default function AnimalDetail(props) {
 }
 
 export async function getStaticPaths() {
-    const paths = animals_data.map(animal => ({
+    const animalsList = ["1", "2", "3"];
+    const paths = animalsList.map(animal => ({
         params: {
-            id: animal.id.toString(),
+            id: animal.toString(),
         },
     }));
     return {

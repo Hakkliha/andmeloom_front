@@ -12,16 +12,7 @@ export const useAuth = () => useContext(AuthContext);
 
 const AuthProvider = ({ children }) => {
     const [auth, setAuth] = useState(false);
-    const [user, setUser] = useState({
-        "token": "",
-        "type": "",
-        "id": "",
-        "username": "",
-        "email": "",
-        "roles": [
-            ""
-        ]
-    });
+    const [user, setUser] = useState(null);
 
     useEffect(() => {
         const isAuth = () => {

@@ -5,6 +5,10 @@ class OwnerService {
         return api.get('/users?firstName=&lastName=');
     }
 
+    getListOfOwnerIds() {
+        return api.get('/users/owner_ids');
+    }
+
     getListSearch(searchParam) {
         return api.get(`/users?firstName=${searchParam || ''}&lastName=${searchParam || ''}`);
     }
