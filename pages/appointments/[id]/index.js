@@ -9,6 +9,7 @@ import moment from "moment";
 import {useData} from "../../../functional/DataContext";
 import {useRouter} from "next/router";
 import {ImCross} from "react-icons/im";
+import {getStaticPathsAppointment} from "../../../functional/RouterService";
 
 export default function AppointmentDetail(props) {
     const [appointment, setAppointment] = useState(null);
@@ -83,16 +84,7 @@ export default function AppointmentDetail(props) {
 }
 
 export async function getStaticPaths() {
-    const allOwners = ["1", "2", "3"];
-    const paths = allOwners.map(id => ({
-        params: {
-            id: id.toString(),
-        },
-    }));
-    return {
-        paths,
-        fallback: 'blocking',
-    };
+    return await getStaticPathsAppointment();
 }
 
 export async function getStaticProps(context) {

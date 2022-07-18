@@ -9,6 +9,7 @@ import OwnerService from "../../../functional/OwnerService";
 import {ImCross} from 'react-icons/im';
 import {useData} from "../../../functional/DataContext";
 import {useRouter} from "next/router";
+import {getStaticPathsAnimal} from "../../../functional/RouterService";
 
 
 export default function AnimalDetail(props) {
@@ -25,11 +26,11 @@ export default function AnimalDetail(props) {
         const ownerData = ownerResponse.data;
         const newOwner = Owner.fromJSON(ownerData);
         const newAnimal = Animal.fromJSON(animalData, newOwner);
-        const appointmentsResponse = appointmens_data.filter(appointment => appointment.animal.id === newAnimal.id);
-        // const newAppointments = appointmentsResponse.map(appointment => Appointment.fromJSON(appointment));
+        const appointmentsResponse = [];
+        const newAppointments = appointmentsResponse.map(appointment => Appointment.fromJSON(appointment));
         setOwner(newOwner);
         setAnimal(newAnimal);
-        setAppointments(appointmentsResponse);
+        setAppointments(newAppointments);
     }
     , [props.animalId]);
 
@@ -89,16 +90,7 @@ export default function AnimalDetail(props) {
 }
 
 export async function getStaticPaths() {
-    const animalsList = ["1", "2", "3"];
-    const paths = animalsList.map(animal => ({
-        params: {
-            id: animal.toString(),
-        },
-    }));
-    return {
-        paths,
-        fallback: 'blocking',
-    };
+    return await getStaticPathsAnimal();
 }
 
 export async function getStaticProps(context) {

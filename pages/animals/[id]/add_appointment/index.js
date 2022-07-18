@@ -5,6 +5,7 @@ import Link from "next/link";
 import AppointmentForm from "../../../../components/Functional/AppointmentForm";
 import OwnerService from "../../../../functional/OwnerService";
 import Owner from "../../../../data/classes/Owner";
+import {getStaticPathsAnimal} from "../../../../functional/RouterService";
 
 export default function AnimalAddAppointment(props) {
     const [animal, setAnimal] = useState(null);
@@ -49,16 +50,7 @@ export default function AnimalAddAppointment(props) {
 }
 
 export async function getStaticPaths() {
-    const animalsList = ["1", "2", "3"];
-    const paths = animalsList.map(animal => ({
-        params: {
-            id: animal.toString(),
-        },
-    }));
-    return {
-        paths,
-        fallback: 'blocking',
-    };
+   return await getStaticPathsAnimal();
 }
 
 export async function getStaticProps(context) {

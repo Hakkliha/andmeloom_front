@@ -5,6 +5,7 @@ import AnimalForm from "../../../../components/Functional/AnimalForm";
 import OwnerService from "../../../../functional/OwnerService";
 import LoadingSpinner from "../../../../components/Style/LoadingSpinner";
 import {useData} from "../../../../functional/DataContext";
+import {getStaticPathsOwner} from "../../../../functional/RouterService";
 
 export default function OwnerAnimalAdd(props) {
     const [owner, setOwner] = useState(null);
@@ -37,24 +38,7 @@ export default function OwnerAnimalAdd(props) {
 }
 
 export async function getStaticPaths() {
-    // const credentials = await axios.post('http://localhost:8080/api/auth/signin', {
-    //     username: "irw", password: "kakajunn123"
-    // });
-    // const allOwners = await axios({
-    //     url: 'http://localhost:8080/api/owners/owner_ids', method: 'get', headers: {
-    //         "Content-Type": "application/json", "Authorization": "Bearer " + credentials.data.token
-    //     }
-    // });
-
-    const allOwners = ["1", "2", "3"];
-    const paths = allOwners.map(id => ({
-        params: {
-            id: id.toString(),
-        },
-    }));
-    return {
-        paths, fallback: 'blocking',
-    };
+    return await getStaticPathsOwner();
 }
 
 export async function getStaticProps(context) {
